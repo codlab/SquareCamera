@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -11,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -149,7 +151,11 @@ public class RuntimePermissionActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(RuntimePermissionActivity.this, permissions, REQUEST_CODE);
     }
 
-    private void sendResult(final boolean isPermissionGranted) {
+    private void sendResult(boolean isPermissionGranted) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            isPermissionGranted = true;
+        }
+        Log.d("RuntimePermissionActivity", "sendResult " + isPermissionGranted);
         final Intent resultIntent = new Intent();
         resultIntent.putExtra(REQUESTED_PERMISSION, isPermissionGranted);
         setResult(Activity.RESULT_OK, resultIntent);
